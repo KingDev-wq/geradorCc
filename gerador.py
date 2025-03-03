@@ -4,20 +4,10 @@ import time
 import requests
 import sys
 
-def falling_letters(text, delay=0.05):
-    """
-    Função para exibir as letras caindo de cima para baixo no terminal.
-    """
-    for i in range(len(text)):
-        sys.stdout.write(text[i])  # Escreve a letra atual
-        sys.stdout.flush()  # Força a atualização da tela
-        time.sleep(delay)  # Pausa entre as letras
-    print()  # Pula para a próxima linha após o texto
-
 def show_credits():
     clear()
     print("\n\n")
-    falling_letters("""
+    print("""
     ─────────────────────────────────────
       🔥 PAINEL DE GERADORES - DedSec.py 🔥
       Criado por: DedSec.py
@@ -128,7 +118,7 @@ def fake_data_generator():
 
 while True:
     clear()
-    falling_letters("""
+    print("""
     ██████╗ ██████╗  ██████╗ ███████╗███╗   ██╗
     ██╔══██╗██╔══██╗██╔════╝ ██╔════╝████╗  ██║
     ██████╔╝██████╔╝██║  ███╗█████╗  ██╔██╗ ██║
