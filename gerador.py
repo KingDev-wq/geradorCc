@@ -2,10 +2,22 @@ import random
 import os
 import time
 import requests
+import sys
+
+def falling_letters(text, delay=0.05):
+    """
+    Função para exibir as letras caindo de cima para baixo no terminal.
+    """
+    for i in range(len(text)):
+        sys.stdout.write(text[i])  # Escreve a letra atual
+        sys.stdout.flush()  # Força a atualização da tela
+        time.sleep(delay)  # Pausa entre as letras
+    print()  # Pula para a próxima linha após o texto
 
 def show_credits():
     clear()
-    print("""
+    print("\n\n")
+    falling_letters("""
     ─────────────────────────────────────
       🔥 PAINEL DE GERADORES - DedSec.py 🔥
       Criado por: DedSec.py
@@ -79,9 +91,44 @@ def email_temp():
         else:
             print("\n❌ Opção inválida!")
 
+def generate_fake_data():
+    """
+    Função para gerar dados aleatórios (nome, idade, endereço, etc.).
+    """
+    first_names = ["João", "Maria", "Carlos", "Ana", "Pedro", "Carla", "Lucas", "Beatriz"]
+    last_names = ["Silva", "Oliveira", "Santos", "Pereira", "Costa", "Almeida", "Souza", "Mendes"]
+    streets = ["Rua 1", "Avenida Central", "Rua das Flores", "Rua Nova", "Avenida Brasil", "Rua dos Trilhos"]
+    cities = ["São Paulo", "Rio de Janeiro", "Belo Horizonte", "Fortaleza", "Salvador", "Curitiba"]
+    states = ["SP", "RJ", "MG", "CE", "BA", "PR"]
+
+    first_name = random.choice(first_names)
+    last_name = random.choice(last_names)
+    age = random.randint(18, 80)
+    street = random.choice(streets)
+    city = random.choice(cities)
+    state = random.choice(states)
+    zip_code = f"{random.randint(10000, 99999)}-{random.randint(100, 999)}"
+
+    fake_data = {
+        "Nome": f"{first_name} {last_name}",
+        "Idade": age,
+        "Endereço": f"{street}, {city} - {state}",
+        "CEP": zip_code
+    }
+
+    return fake_data
+
+def fake_data_generator():
+    clear()
+    print("💻 GERADOR DE DADOS FALSOS 💻")
+    fake_data = generate_fake_data()
+    for key, value in fake_data.items():
+        print(f"🔹 {key}: {value}")
+    input("\nPressione ENTER para voltar...")
+
 while True:
     clear()
-    print("""
+    falling_letters("""
     ██████╗ ██████╗  ██████╗ ███████╗███╗   ██╗
     ██╔══██╗██╔══██╗██╔════╝ ██╔════╝████╗  ██║
     ██████╔╝██████╔╝██║  ███╗█████╗  ██╔██╗ ██║
@@ -90,11 +137,14 @@ while True:
     ╚═╝     ╚═╝      ╚═════╝ ╚══════╝╚═╝  ╚═══╝
     
     🔥 Painel desenvolvido por DedSec.py 🔥
-    
+    """)
+
+    print("""
     [1] GERAR CC E CPF 💳
     [2] CHECKER CC 🔍
     [3] GERAR EMAIL TEMPORÁRIO 📧
     [4] CRÉDITOS ✨
+    [5] GERADOR DE DADOS FALSOS 💻
     [00] SAIR ❌
     """)
 
@@ -113,8 +163,10 @@ while True:
         checker_cc(cc_number)
     elif opcao == "3":
         email_temp()
-    elif opcao == "7":
+    elif opcao == "4":
         show_credits()
+    elif opcao == "5":
+        fake_data_generator()
     elif opcao == "00":
         clear()
         print("Saindo do sistema...")
