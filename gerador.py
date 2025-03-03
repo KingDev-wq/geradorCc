@@ -4,20 +4,10 @@ import time
 import requests
 import sys
 
-def falling_letters(text, delay=0.03):
-    """
-    Função para exibir as letras caindo de cima para baixo no terminal.
-    """
-    for i in range(len(text)):
-        sys.stdout.write(text[i])  # Escreve a letra atual
-        sys.stdout.flush()  # Força a atualização da tela
-        time.sleep(delay)  # Pausa entre as letras
-    print()  # Pula para a próxima linha após o texto
-
 def show_credits():
     clear()
     print("\n\n")
-    falling_letters("""
+    print("""
     ─────────────────────────────────────
       🔥 PAINEL DE GERADORES - DedSec.py 🔥
       Criado por: DedSec.py
@@ -54,7 +44,7 @@ def check_inbox(user):
     url = f"https://www.1secmail.com/api/v1/?action=getMessages&login={user}&domain=1secmail.com"
     response = requests.get(url)
 
-    if response.status_code == 200:  # Verifica se a requisição foi bem-sucedida
+    if response.status_code == 200:
         try:
             messages = response.json()
             if messages:
@@ -91,9 +81,76 @@ def email_temp():
         else:
             print("\n❌ Opção inválida!")
 
+def generate_fake_data():
+    first_names = ["João", "Maria", "Carlos", "Ana", "Pedro", "Carla", "Lucas", "Beatriz"]
+    last_names = ["Silva", "Oliveira", "Santos", "Pereira", "Costa", "Almeida", "Souza", "Mendes"]
+    streets = ["Rua 1", "Avenida Central", "Rua das Flores", "Rua Nova", "Avenida Brasil", "Rua dos Trilhos"]
+    cities = ["São Paulo", "Rio de Janeiro", "Belo Horizonte", "Fortaleza", "Salvador", "Curitiba"]
+    states = ["SP", "RJ", "MG", "CE", "BA", "PR"]
+    emails = ["gmail.com", "hotmail.com", "yahoo.com", "outlook.com", "icloud.com"]
+    phones = ["9" + str(random.randint(100000000, 999999999))]
+    rg_numbers = [random.randint(100000000, 999999999)]
+    
+    # Gerar dados
+    first_name = random.choice(first_names)
+    last_name = random.choice(last_names)
+    full_name = f"{first_name} {last_name}"
+    cpf = generate_cpf()
+    address = f"{random.choice(streets)}, {random.randint(1, 100)} - {random.choice(cities)} - {random.choice(states)}"
+    email = f"{first_name.lower()}.{last_name.lower()}@{random.choice(emails)}"
+    phone = random.choice(phones)
+    rg = random.choice(rg_numbers)
+    dob = f"{random.randint(1, 31):02d}/{random.randint(1, 12):02d}/{random.randint(1980, 2000)}"
+    gender = random.choice(["Masculino", "Feminino", "Outro"])
+
+    fake_data = {
+        "Nome": full_name,
+        "CPF": cpf,
+        "Endereço": address,
+        "Email": email,
+        "Telefone": phone,
+        "Data de Nascimento": dob,
+        "RG": rg,
+        "Sexo": gender
+    }
+
+    return fake_data
+
+def fake_data_generator():
+    clear()
+    print("💻 GERADOR DE DADOS FALSOS 💻")
+    fake_data = generate_fake_data()
+    for key, value in fake_data.items():
+        print(f"🔹 {key}: {value}")
+    input("\nPressione ENTER para voltar...")
+
+def bin_lookup():
+    clear()
+    print("🔎 BIN LOOKUP 🔎\n")
+    bin_number = input("Digite os 6 primeiros números do cartão (BIN): ")
+    url = f"https://lookup.binlist.net/{bin_number}"
+    headers = {
+        "Accept": "application/json"
+    }
+    try:
+        response = requests.get(url, headers=headers)
+        data = response.json()
+        
+        if "bank" in data:
+            print(f"\n🔹 Banco: {data['bank']['name']}")
+            print(f"🔹 Tipo de Cartão: {data['type']}")
+            print(f"🔹 Marca: {data['brand']}")
+            print(f"🔹 País: {data['country']['name']}")
+        else:
+            print("\n❌ BIN não encontrado ou inválido.")
+    except Exception as e:
+        print(f"\n❌ Erro ao acessar a API: {str(e)}")
+
+    input("\nPressione ENTER para voltar...")
+
 while True:
     clear()
-    falling_letters("""
+    print("""
     ██████╗ ██████╗  ██████╗ ███████╗███╗   ██╗
     ██╔══██╗██╔══██╗██╔════╝ ██╔════╝████╗  ██║
     ██████╔╝██████╔╝██║  ███╗█████╗  ██╔██╗ ██║
@@ -108,7 +165,8 @@ while True:
     [1] GERAR CC E CPF 💳
     [2] CHECKER CC 🔍
     [3] GERAR EMAIL TEMPORÁRIO 📧
-    [4] CRÉDITOS ✨
+    [4] BIN LOOKUP 🔎
+    [5] GERADOR DE DADOS FALSOS 💻
     [00] SAIR ❌
     """)
 
@@ -128,7 +186,9 @@ while True:
     elif opcao == "3":
         email_temp()
     elif opcao == "4":
-        show_credits()
+        bin_lookup()
+    elif opcao == "5":
+        fake_data_generator()
     elif opcao == "00":
         clear()
         print("Saindo do sistema...")
