@@ -40,16 +40,23 @@ def generate_email():
 
 def check_inbox(user):
     url = f"https://www.1secmail.com/api/v1/?action=getMessages&login={user}&domain=1secmail.com"
-    response = requests.get(url).json()
-    
-    if response:
-        print("\n📩 MENSAGENS RECEBIDAS 📩")
-        for mail in response:
-            print(f"\n🔹 De: {mail['from']}")
-            print(f"🔹 Assunto: {mail['subject']}")
-            print(f"🔹 ID: {mail['id']}")
+    response = requests.get(url)
+
+    if response.status_code == 200:  # Verifica se a requisição foi bem-sucedida
+        try:
+            messages = response.json()
+            if messages:
+                print("\n📩 MENSAGENS RECEBIDAS 📩")
+                for mail in messages:
+                    print(f"\n🔹 De: {mail['from']}")
+                    print(f"🔹 Assunto: {mail['subject']}")
+                    print(f"🔹 ID: {mail['id']}")
+            else:
+                print("\n📭 Nenhuma mensagem encontrada!")
+        except ValueError:
+            print("\n❌ Erro ao processar a resposta da API.")
     else:
-        print("\n📭 Nenhuma mensagem encontrada!")
+        print(f"\n❌ Erro ao acessar a API: {response.status_code}")
 
     input("\nPressione ENTER para voltar...")
 
